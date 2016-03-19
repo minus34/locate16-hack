@@ -13,7 +13,7 @@ app = Flask(__name__, static_url_path='')
 # create postgres connect string
 settings = dict()
 settings['pg_host'] = os.getenv("PGHOST", "localhost")
-settings['pg_port'] = os.getenv("PGPORT", 5434)
+settings['pg_port'] = os.getenv("PGPORT", 5432)
 settings['pg_db'] = os.getenv("PGDATABASE", "psma_201602")
 settings['pg_user'] = os.getenv("PGUSER", "postgres")
 settings['pg_password'] = os.getenv("PGPASSWORD", "password")
