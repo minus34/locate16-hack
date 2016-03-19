@@ -17,7 +17,7 @@ SELECT CASE WHEN left(hex_pid, 1) = '-' THEN split_part(hex_pid, '-', 2)::intege
        count_2010,
        count_2016,
        count_2016 - count_2010 AS difference,
-       CASE WHEN count_2010 > 0 THEN (count_2016::float / count_2010::float * 100.0)::integer - 100 ELSE 0 END AS percent,
+       CASE WHEN count_2010 > 0 THEN (count_2016::float / count_2010::float * 100.0)::integer - 100 ELSE count_2016 * 100.0 END AS percent,
        null::geometry(polygon,4326) AS geom
   FROM (
          SELECT hex_pid_{1} AS hex_pid,

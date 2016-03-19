@@ -54,7 +54,7 @@ def bdys():
     start_zoom_level = 13
     start_width = 0.3  # in km
     multiple = 2.0
-    max_width = 1000.0
+    max_width = 200.0
 
     curr_width = start_width
     curr_zoom_level = start_zoom_level

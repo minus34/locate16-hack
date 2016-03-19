@@ -24,7 +24,7 @@ def main():
         '--hex-multiplier', type=int, default=2,
         help='The multiplier used to increase hex size until max width is reached.')
     parser.add_argument(
-        '--max-hex-width', type=float, default=1000,
+        '--max-hex-width', type=float, default=200,
         help='Maximum hex width (in km).')
 
     # PG Options

@@ -5,7 +5,7 @@ var geojsonLayer = null;
 var maxZoom = 4;
 var minZoom = 15;
 var valueType = "percent";
-var zoomLevel = 11
+var zoomLevel = 10
 
 
 var colours = []
@@ -23,7 +23,7 @@ function init() {
 		}).addTo(map);
 
 	//Set the view to a given center and zoom
-	map.setView(new L.LatLng(-33.85, 151.15), zoomLevel);
+	map.setView(new L.LatLng(-37.81, 144.96), zoomLevel);
 
 	// Get bookmarks/
 	var storage = {
