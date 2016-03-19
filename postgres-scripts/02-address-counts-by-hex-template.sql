@@ -23,7 +23,7 @@ SELECT CASE WHEN left(hex_pid, 1) = '-' THEN split_part(hex_pid, '-', 2)::intege
          SELECT hex_pid_{1} AS hex_pid,
          SUM(CASE WHEN year_added <= 2010 THEN 1 ELSE 0 END) AS count_2010,
          Count(*) AS count_2016
-         FROM hex.address_hexes
+         FROM public.address_hexes
          GROUP BY hex_pid_{1}
   ) AS sqt
   WHERE count_2016 - count_2010 > {3};

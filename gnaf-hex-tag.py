@@ -130,7 +130,7 @@ def hex_tag_gnaf(pg_cur, settings):
         curr_width *= float(settings['hex_multiplier'])
 
     # # step through each hex width and tag GNAF address points into temp tables
-    # pg_cur.execute("DROP TABLE IF EXISTS {0}.address_hexes CASCADE".format(settings['hex_schema'],))
+    # pg_cur.execute("DROP TABLE IF EXISTS {0}.address_hexes CASCADE".format("public",))
     # create_table_list = list()
     # create_table_list.append("CREATE TABLE {0}.address_hexes (gid serial NOT NULL,"
     #                          "gnaf_pid character varying(16) NOT NULL,"
@@ -138,11 +138,11 @@ def hex_tag_gnaf(pg_cur, settings):
     #                          "year_added smallint NULL,"
     #                          "latitude numeric(10,8),"
     #                          "longitude numeric(11,8)"
-    #                          .format(settings['hex_schema'],))
+    #                          .format("public",))
     # for table in table_list:
     #     create_table_list.append(", {0} character varying(20)".format(table[2]))
     # create_table_list.append(") WITH (OIDS=FALSE);ALTER TABLE {0}.address_hexes OWNER TO postgres"
-    #                          .format(settings['hex_schema'],))
+    #                          .format("public",))
     # pg_cur.execute("".join(create_table_list))
     #
     # # create insert statement for multiprocessing
