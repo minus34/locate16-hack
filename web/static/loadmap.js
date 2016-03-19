@@ -60,7 +60,7 @@ function init() {
 			this._div.innerHTML = (props ? '<b>' + props.percent.toLocaleString(['en-AU']) + '%</b> increase' : 'pick a hex');
 			break;
 		case "difference":
-			this._div.innerHTML = (props ? '<b>' + props.percent.toLocaleString(['en-AU']) + '</b> new addresses' : 'pick a hex');
+			this._div.innerHTML = (props ? '<b>' + props.difference.toLocaleString(['en-AU']) + '</b> new addresses' : 'pick a hex');
 			break;
 		default:
 			this._div.innerHTML = (props ? '<b>' + props.percent.toLocaleString(['en-AU']) + '%</b> increase' : 'pick a hex');
@@ -114,11 +114,11 @@ function init() {
 			renderVal = parseInt(feature.properties.percent);
 			break;
 		case "difference":
-			colours = ['#f7fcf5', '#e5f5e0', '#c7e9c0', '#a1d99b', '#74c476', '#41ab5d', '#238b45', '#005a32']
+			colours = ['#feedde','#fdd0a2','#fdae6b','#fd8d3c','#f16913','#d94801','#8c2d04']
 			renderVal = parseInt(feature.properties.difference);
 			break;
 		default:
-			colours = ['#fcfbfd', '#efedf5', '#dadaeb', '#bcbddc', '#9e9ac8', '#807dba', '#6a51a3', '#4a1486']
+			colours = ['#fee5d9','#fcbba1','#fc9272','#fb6a4a','#ef3b2c','#cb181d','#99000d']
 			renderVal = parseInt(feature.properties.percent);
 		}
 
@@ -149,10 +149,6 @@ function init() {
 		    if (zoomDiff > 0) {
                 d = d / Math.pow(4, zoomDiff)
 		    }
-
-            console.log(d);
-            console.log(zoomDiff);
-            console.log(d);
 
 			return d > 500 ? colours[6] :
 			d > 200 ? colours[5] :
@@ -187,6 +183,11 @@ function init() {
 			        0.1;
 			break;
 		case "difference":
+		    zoomDiff = 11 - zoomLevel;
+		    if (zoomDiff > 0) {
+                d = d / Math.pow(4, zoomDiff)
+		    }
+
 			return d > 500 ? 0.7 :
 			d > 200 ? 0.6 :
 			d > 100 ? 0.5 :

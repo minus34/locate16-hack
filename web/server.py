@@ -1,13 +1,7 @@
-import ast
-import collections
-import json
+
 import math
-# import pymongo
 import os
 import psycopg2
-import sys
-
-from datetime import datetime
 
 from flask import Flask
 from flask import render_template
@@ -72,8 +66,6 @@ def bdys():
             curr_width /= multiple
 
         curr_zoom_level -= 1
-
-    print curr_width
 
     # Get table name
     curr_width_name = str(curr_width).replace(".", "_")

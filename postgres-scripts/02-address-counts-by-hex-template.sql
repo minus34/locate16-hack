@@ -28,9 +28,6 @@ SELECT CASE WHEN left(hex_pid, 1) = '-' THEN split_part(hex_pid, '-', 2)::intege
   ) AS sqt
   WHERE count_2016 - count_2010 > {3};
 
-
-
-
   
 UPDATE hex.{0} SET geom = get_hex_by_coords({2}, x, y);
 
