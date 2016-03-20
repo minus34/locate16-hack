@@ -7,8 +7,10 @@ from flask import Flask
 from flask import render_template
 from flask import request
 from flask import Response
+from flask.ext.compress import Compress
 
 app = Flask(__name__, static_url_path='')
+Compress(app)
 
 # create postgres connect string
 settings = dict()
@@ -129,6 +131,8 @@ def bdys():
 
     # end_time = datetime.now()
     # print "PostGIS : {0} records in {1}".format(row_count, end_time - start_time)
+
+    # response = total_output.encode("zlib")
 
     return Response(total_output, mimetype='application/json')
 
