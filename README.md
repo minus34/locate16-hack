@@ -1,5 +1,5 @@
 # locate16-hack
-This [visualisation](http://54.252.173.223/) shows how Australian cities have grown over time - from the national scale, right down to the suburb level.
+This [visualisation](http://citygrowth.minus34.com/) shows how Australian cities have grown over time - from the national scale, right down to the suburb level.
 
 Using G-NAF address creation dates as a proxy for new housing - it shows the percentage and volume increase in addresses from 2010 to 2015.
 
