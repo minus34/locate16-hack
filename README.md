@@ -1,5 +1,5 @@
 # City Growth - A Locate16 Hack
-City Growth is a [visualisation](http://citygrowth.minus34.com/) that shows how Australian cities have grown over time - from the national scale, right down to the suburb level.
+City Growth is a visualisation that shows how Australian cities have grown over time - from the national scale, right down to the suburb level.
 
 Using G-NAF address creation dates as a proxy for new housing - it shows the percentage and volume increase in addresses from 2010 to 2015.
 
