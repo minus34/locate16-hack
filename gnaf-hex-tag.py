@@ -48,8 +48,11 @@ def main():
 
     # schema names for the raw gnaf, flattened reference and admin boundary tables
     parser.add_argument(
-        '--gnaf-schema', default='gnaf_2017',
-        help='Schema name of the ready to use GNAF tables. Defaults to \'gnaf\'.')
+        '--raw-gnaf-schema', default='raw_gnaf_201711',
+        help='Schema name of the ready to use GNAF tables. Defaults to \'raw_gnaf_201711\'.')
+    parser.add_argument(
+        '--gnaf-schema', default='gnaf_201711',
+        help='Schema name of the ready to use GNAF tables. Defaults to \'gnaf_201711\'.')
     parser.add_argument(
         '--hex-schema', default='hex',
         help='Destination schema name to store hex tables in. Defaults to \'hex\'.')
@@ -68,6 +71,7 @@ def main():
 
     settings['max_concurrent_processes'] = args.max_processes
     # settings['states_to_load'] = args.states
+    settings['raw_gnaf_schema'] = args.raw_gnaf_schema
     settings['gnaf_schema'] = args.gnaf_schema
     settings['hex_schema'] = args.hex_schema
 
@@ -110,7 +114,7 @@ def main():
 
 
 def hex_tag_gnaf(pg_cur, settings):
-    # start_time = datetime.now()
+    start_time = datetime.now()
 
     pg_cur.execute("CREATE SCHEMA IF NOT EXISTS {0} AUTHORIZATION {1}"
                    .format(settings['hex_schema'], settings['pg_user']))
@@ -129,51 +133,51 @@ def hex_tag_gnaf(pg_cur, settings):
 
         curr_width *= float(settings['hex_multiplier'])
 
-    # # step through each hex width and tag GNAF address points into temp tables
-    # pg_cur.execute("DROP TABLE IF EXISTS {0}.address_hexes CASCADE".format("public",))
-    # create_table_list = list()
-    # create_table_list.append("CREATE TABLE {0}.address_hexes (gid serial NOT NULL,"
-    #                          "gnaf_pid character varying(16) NOT NULL,"
-    #                          "alias_principal character(1) NOT NULL,"
-    #                          "year_added smallint NULL,"
-    #                          "latitude numeric(10,8),"
-    #                          "longitude numeric(11,8)"
-    #                          .format("public",))
-    # for table in table_list:
-    #     create_table_list.append(", {0} character varying(20)".format(table[2]))
-    # create_table_list.append(") WITH (OIDS=FALSE);ALTER TABLE {0}.address_hexes OWNER TO postgres"
-    #                          .format("public",))
-    # pg_cur.execute("".join(create_table_list))
-    #
-    # # create insert statement for multiprocessing
-    # insert_field_list = list()
-    # insert_field_list.append("(gnaf_pid, alias_principal, year_added, latitude, longitude")
-    #
-    # select_field_list = list()
-    # select_field_list.append("SELECT pnts.gnaf_pid, pnts.alias_principal, "
-    #                          "extract(year from tab.date_created)::smallint, pnts.latitude, pnts.longitude")
-    #
-    # for table in table_list:
-    #     insert_field_list.append(", {0}".format(table[2]))
-    #     select_field_list.append(", get_hex_pid({0}, pnts.longitude, pnts.latitude) ".format(table[1]))
-    # insert_field_list.append(") ")
-    #
-    # insert_statement_list = list()
-    # insert_statement_list.append("INSERT INTO {0}.address_hexes ".format(settings['hex_schema'],))
-    # insert_statement_list.append("".join(insert_field_list))
-    # insert_statement_list.append("".join(select_field_list))
-    # insert_statement_list.append("FROM raw_gnaf.address_detail AS tab "
-    #                              "INNER JOIN gnaf.address_principals AS pnts "
-    #                              "ON tab.address_detail_pid = pnts.gnaf_pid")
-    #
-    # sql = "".join(insert_statement_list) + ";"
-    # sql_list = split_sql_into_list(pg_cur, sql,
-    #            settings['gnaf_schema'], "address_principals", "pnts", "gid", settings)
-    # # print("\n".join(sql_list)
-    #
-    # multiprocess_list("sql", sql_list, settings)
-    #
-    # print("\t- Step 1 of 3 : gnaf hex tag table created : {0}".format(datetime.now() - start_time)
+    # step through each hex width and tag GNAF address points into temp tables
+    pg_cur.execute("DROP TABLE IF EXISTS {0}.address_hexes CASCADE".format(settings['hex_schema'],))
+    create_table_list = list()
+    create_table_list.append("CREATE TABLE {0}.address_hexes (gid serial NOT NULL,"
+                             "gnaf_pid character varying(16) NOT NULL,"
+                             "alias_principal character(1) NOT NULL,"
+                             "year_added smallint NULL,"
+                             "latitude numeric(10,8),"
+                             "longitude numeric(11,8)"
+                             .format(settings['hex_schema'],))
+    for table in table_list:
+        create_table_list.append(", {0} character varying(20)".format(table[2]))
+    create_table_list.append(") WITH (OIDS=FALSE);ALTER TABLE {0}.address_hexes OWNER TO postgres"
+                             .format(settings['hex_schema'],))
+    pg_cur.execute("".join(create_table_list))
+
+    # create insert statement for multiprocessing
+    insert_field_list = list()
+    insert_field_list.append("(gnaf_pid, alias_principal, year_added, latitude, longitude")
+
+    select_field_list = list()
+    select_field_list.append("SELECT pnts.gnaf_pid, pnts.alias_principal, "
+                             "extract(year from tab.date_created)::smallint, pnts.latitude, pnts.longitude")
+
+    for table in table_list:
+        insert_field_list.append(", {0}".format(table[2]))
+        select_field_list.append(", get_hex_pid({0}, pnts.longitude, pnts.latitude) ".format(table[1]))
+    insert_field_list.append(") ")
+
+    insert_statement_list = list()
+    insert_statement_list.append("INSERT INTO {0}.address_hexes ".format(settings['hex_schema'],))
+    insert_statement_list.append("".join(insert_field_list))
+    insert_statement_list.append("".join(select_field_list))
+    insert_statement_list.append("FROM {0}.address_detail AS tab "
+                                 "INNER JOIN {1}.address_principals AS pnts "
+                                 "ON tab.address_detail_pid = pnts.gnaf_pid"
+        .format(settings['raw_gnaf_schema'], settings['gnaf_schema']))
+
+    sql = "".join(insert_statement_list) + ";"
+    sql_list = split_sql_into_list(pg_cur, sql, settings['gnaf_schema'], "address_principals", "pnts", "gid", settings)
+    # print("\n".join(sql_list)
+
+    multiprocess_list("sql", sql_list, settings)
+
+    print("\t- Step 1 of 3 : gnaf hex tag table created : {0}".format(datetime.now() - start_time))
 
     # create count table with hex geoms
     sql_list = list()
