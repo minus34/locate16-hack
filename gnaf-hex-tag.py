@@ -48,7 +48,7 @@ def main():
 
     # schema names for the raw gnaf, flattened reference and admin boundary tables
     parser.add_argument(
-        '--gnaf-schema', default='gnaf',
+        '--gnaf-schema', default='gnaf_2017',
         help='Schema name of the ready to use GNAF tables. Defaults to \'gnaf\'.')
     parser.add_argument(
         '--hex-schema', default='hex',
@@ -74,7 +74,7 @@ def main():
     # create postgres connect string
     settings['pg_host'] = args.pghost or os.getenv("PGHOST", "localhost")
     settings['pg_port'] = args.pgport or os.getenv("PGPORT", 5432)
-    settings['pg_db'] = args.pgdb or os.getenv("PGDATABASE", "psma_201602")
+    settings['pg_db'] = args.pgdb or os.getenv("PGDATABASE", "geo")
     settings['pg_user'] = args.pguser or os.getenv("PGUSER", "postgres")
     settings['pg_password'] = args.pgpassword or os.getenv("PGPASSWORD", "password")
 
@@ -90,7 +90,7 @@ def main():
     try:
         pg_conn = psycopg2.connect(settings['pg_connect_string'])
     except psycopg2.Error:
-        print "Unable to connect to database\nACTION: Check your Postgres parameters and/or database security"
+        print("Unable to connect to database\nACTION: Check your Postgres parameters and/or database security")
         return False
 
     pg_conn.autocommit = True
@@ -98,19 +98,19 @@ def main():
 
     # tag GNAF addresses with hex PIDs
     start_time = datetime.now()
-    print ""
-    print "Start hex tagging points : {0}".format(start_time)
+    print("")
+    print("Start hex tagging points : {0}".format(start_time))
     hex_tag_gnaf(pg_cur, settings)
-    print "Points hex tagged: {0}".format(datetime.now() - start_time)
+    print("Points hex tagged: {0}".format(datetime.now() - start_time))
 
     pg_cur.close()
     pg_conn.close()
 
-    print "Total time : : {0}".format(datetime.now() - full_start_time)
+    print("Total time : : {0}".format(datetime.now() - full_start_time))
 
 
 def hex_tag_gnaf(pg_cur, settings):
-    start_time = datetime.now()
+    # start_time = datetime.now()
 
     pg_cur.execute("CREATE SCHEMA IF NOT EXISTS {0} AUTHORIZATION {1}"
                    .format(settings['hex_schema'], settings['pg_user']))
@@ -167,12 +167,13 @@ def hex_tag_gnaf(pg_cur, settings):
     #                              "ON tab.address_detail_pid = pnts.gnaf_pid")
     #
     # sql = "".join(insert_statement_list) + ";"
-    # sql_list = split_sql_into_list(pg_cur, sql, settings['gnaf_schema'], "address_principals", "pnts", "gid", settings)
-    # # print "\n".join(sql_list)
+    # sql_list = split_sql_into_list(pg_cur, sql,
+    #            settings['gnaf_schema'], "address_principals", "pnts", "gid", settings)
+    # # print("\n".join(sql_list)
     #
     # multiprocess_list("sql", sql_list, settings)
     #
-    # print "\t- Step 1 of 3 : gnaf hex tag table created : {0}".format(datetime.now() - start_time)
+    # print("\t- Step 1 of 3 : gnaf hex tag table created : {0}".format(datetime.now() - start_time)
 
     # create count table with hex geoms
     sql_list = list()
@@ -183,7 +184,7 @@ def hex_tag_gnaf(pg_cur, settings):
         sql_list.append(template_sql.format(table_name, table[0], table[1], threshhold))
         threshhold *= 4
 
-    # print "\n".join(sql_list)
+    # print("\n".join(sql_list)
 
     multiprocess_list("sql", sql_list, settings)
 
@@ -206,11 +207,11 @@ def multiprocess_list(mp_type, work_list, settings):
     num_results = len(result_list)
 
     if num_jobs > num_results:
-        print "\t- A MULTIPROCESSING PROCESS FAILED WITHOUT AN ERROR\nACTION: Check the record counts"
+        print("\t- A MULTIPROCESSING PROCESS FAILED WITHOUT AN ERROR\nACTION: Check the record counts")
 
     for result in result_list:
         if result != "SUCCESS":
-            print result
+            print(result)
 
 
 def run_sql_multiprocessing(args):
@@ -227,8 +228,8 @@ def run_sql_multiprocessing(args):
     try:
         pg_cur.execute(the_sql)
         result = "SUCCESS"
-    except psycopg2.Error, e:
-        result = "SQL FAILED! : {0} : {1}".format(the_sql, e.message)
+    except psycopg2.Error as e:
+        result = "SQL FAILED! : {0} : {1}".format(the_sql, e)
 
     pg_cur.close()
     pg_conn.close()
@@ -242,8 +243,8 @@ def run_command_line(cmd):
         fnull = open(os.devnull, "w")
         subprocess.call(cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT)
         result = "SUCCESS"
-    except Exception, e:
-        result = "COMMAND FAILED! : {0} : {1}".format(cmd, e.message)
+    except Exception as e:
+        result = "COMMAND FAILED! : {0} : {1}".format(cmd, e)
 
     return result
 
@@ -294,7 +295,7 @@ def split_sql_into_list(pg_cur, the_sql, table_schema, table_name, table_alias, 
     if float(diff) / float(settings['max_concurrent_processes']) < 10.0:
         rows_per_request = 10
         processes = int(math.floor(float(diff) / 10.0)) + 1
-        print "\t\t- running {0} processes (adjusted due to low row count in table to split)".format(processes)
+        print("\t\t- running {0} processes (adjusted due to low row count in table to split)".format(processes))
     else:
         processes = settings['max_concurrent_processes']
 
@@ -318,12 +319,12 @@ def split_sql_into_list(pg_cur, the_sql, table_schema, table_name, table_alias, 
                 mp_sql = the_sql.replace(";", where_clause + ";")
             else:
                 mp_sql = the_sql + where_clause
-                print "\t\t- NOTICE: no ; found at the end of the SQL statement"
+                print("\t\t- NOTICE: no ; found at the end of the SQL statement")
 
         sql_list.append(mp_sql)
         start_pkey = end_pkey
 
-    # print '\n'.join(sql_list)
+    # print('\n'.join(sql_list)
     return sql_list
 
 
