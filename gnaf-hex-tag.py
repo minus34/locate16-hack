@@ -169,7 +169,7 @@ def hex_tag_gnaf(pg_cur, settings):
     insert_statement_list.append("FROM {0}.address_detail AS tab "
                                  "INNER JOIN {1}.address_principals AS pnts "
                                  "ON tab.address_detail_pid = pnts.gnaf_pid"
-        .format(settings['raw_gnaf_schema'], settings['gnaf_schema']))
+                                 .format(settings['raw_gnaf_schema'], settings['gnaf_schema']))
 
     sql = "".join(insert_statement_list) + ";"
     sql_list = split_sql_into_list(pg_cur, sql, settings['gnaf_schema'], "address_principals", "pnts", "gid", settings)
