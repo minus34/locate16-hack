@@ -1,7 +1,7 @@
 # City Growth - A Locate16 Hack
 City Growth is a visualisation that shows how Australian cities have grown over time - from the national scale, right down to the suburb level.
 
-Using G-NAF address creation dates as a proxy for new housing - it shows the percentage and volume increase in addresses from 2010 to 2015.
+Using G-NAF address creation dates as a proxy for new housing - it shows the percentage and volume increase in addresses from 2012 to 2015.
 
 ![locate16-hack-image.png](https://github.com/minus34/locate16-hack/blob/master/locate16-hack-image.png "New addresses around Melbourne")
 

@@ -37,7 +37,7 @@ def main():
     parser.add_argument(
         '--pgdb',
         help='Database name for Postgres server. Defaults to PGDATABASE environment variable if set, '
-             'otherwise psma_201602.')
+             'otherwise psma_201802.')
     parser.add_argument(
         '--pguser',
         help='Username for Postgres server. Defaults to PGUSER environment variable if set, otherwise postgres.')
@@ -48,11 +48,11 @@ def main():
 
     # schema names for the raw gnaf, flattened reference and admin boundary tables
     parser.add_argument(
-        '--raw-gnaf-schema', default='raw_gnaf_201711',
-        help='Schema name of the ready to use GNAF tables. Defaults to \'raw_gnaf_201711\'.')
+        '--raw-gnaf-schema', default='raw_gnaf_201802',
+        help='Schema name of the ready to use GNAF tables. Defaults to \'raw_gnaf_201802\'.')
     parser.add_argument(
-        '--gnaf-schema', default='gnaf_201711',
-        help='Schema name of the ready to use GNAF tables. Defaults to \'gnaf_201711\'.')
+        '--gnaf-schema', default='gnaf_201802',
+        help='Schema name of the ready to use GNAF tables. Defaults to \'gnaf_201802\'.')
     parser.add_argument(
         '--hex-schema', default='hex',
         help='Destination schema name to store hex tables in. Defaults to \'hex\'.')
